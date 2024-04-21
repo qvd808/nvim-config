@@ -4,8 +4,10 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Shift line around for indenting
 local opt_shift = { noremap = true, silent = true }
 vim.keymap.set('i', '<S-Tab>', '<cmd>:<<CR>', opt_shift)
-vim.keymap.set('n', '<S-Tab>', '<cmd>:<<CR>', opt_shift)
-vim.keymap.set('n', '<Tab>', '<cmd>:><CR>', opt_shift)
+vim.keymap.set('n', '<S-Tab>', '<<', opt_shift)
+vim.keymap.set('n', '<Tab>', '>>', opt_shift)
+vim.keymap.set('v', '<S-Tab>', '<gv', opt_shift)
+vim.keymap.set('v', '<Tab>', '>gv', opt_shift)
 
 -- Open file
 vim.keymap.set('n', '<leader><leader>', vim.cmd.Ex)
