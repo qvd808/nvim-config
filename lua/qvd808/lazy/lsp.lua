@@ -4,6 +4,7 @@ return { -- LSP Configuration & Plugins
 		-- Automatically install LSPs and related tools to stdpath for Neovim
 		{ 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
 		'williamboman/mason-lspconfig.nvim',
+		"aca/emmet-ls",
 		'WhoIsSethDaniel/mason-tool-installer.nvim',
 		-- Useful status updates for LSP.
 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -133,6 +134,17 @@ return { -- LSP Configuration & Plugins
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+		local lspconfig = require('lspconfig')
+		-- local configs =require('lspconfig/configs')
+		capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+		lspconfig.emmet_ls.setup({
+			capabilities = capabilities,
+			filetypes = {
+				"html",
+			}
+		})
+
 		-- Enable the following language servers
 		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 		--
@@ -219,6 +231,7 @@ return { -- LSP Configuration & Plugins
 				end,
 			},
 		}
+
 
 
 	end,
