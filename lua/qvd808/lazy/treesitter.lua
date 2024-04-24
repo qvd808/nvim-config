@@ -18,6 +18,10 @@ return {
 			},
 
 			additional_vim_regex_highlighting = false,
+
+			ignore_install = {},
+
+			modules = {},
 		})
 	end
 }

@@ -4,16 +4,17 @@ return { -- LSP Configuration & Plugins
 		-- Automatically install LSPs and related tools to stdpath for Neovim
 		{ 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
 		'williamboman/mason-lspconfig.nvim',
-		"aca/emmet-ls",
+		-- "aca/emmet-ls",
 		'WhoIsSethDaniel/mason-tool-installer.nvim',
 		-- Useful status updates for LSP.
 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
 		{ 'j-hui/fidget.nvim', opts = {} },
-
+	
 		-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
 		-- used for completion, annotations and signatures of Neovim apis
 		{ 'folke/neodev.nvim', opts = {} },
 	},
+	
 	config = function()
 		-- Brief aside: **What is LSP?**
 		--
@@ -134,16 +135,6 @@ return { -- LSP Configuration & Plugins
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-		local lspconfig = require('lspconfig')
-		-- local configs =require('lspconfig/configs')
-		capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-		lspconfig.emmet_ls.setup({
-			capabilities = capabilities,
-			filetypes = {
-				"html",
-			}
-		})
 
 		-- Enable the following language servers
 		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -172,34 +163,37 @@ return { -- LSP Configuration & Plugins
 			-- Some languages (like typescript) have entire language plugins that can be useful:
 			--    https://github.com/pmizio/typescript-tools.nvim
 			--
-			-- But for many setups, the LSP (`tsserver`) will work just fine
-			-- tsserver = {},
+			tsserver = {{
+				-- cmd = {...},
+				filetypes = {"javascript", "javascriptreact", "typescript", "typescriptreact"},
+				capabilities = capabilities,
+			}},
 			--
 
-			lua_ls = {
-				-- cmd = {...},
-				-- filetypes = { ...},
-				-- capabilities = {},
-				settings = {
-						Lua = {
-						completion = {
-							callSnippet = 'Replace',
-						},
-						workspace = {
-							library = {
-								[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-								[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-								[vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types"] = true,
-								[vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
-							},
-							maxPreload = 100000,
-							preloadFileSize = 10000,
-						},
-						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-						-- diagnostics = { disable = { 'missing-fields' } },
-					},
-				},
-			},
+			-- lua_ls = {
+			-- 	-- cmd = {...},
+			-- 	-- filetypes = { ...},
+			-- 	-- capabilities = {},
+			-- 	settings = {
+			-- 			Lua = {
+			-- 			completion = {
+			-- 				callSnippet = 'Replace',
+			-- 			},
+			-- 			workspace = {
+			-- 				library = {
+			-- 					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+			-- 					[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+			-- 					[vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types"] = true,
+			-- 					[vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
+			-- 				},
+			-- 				maxPreload = 100000,
+			-- 				preloadFileSize = 10000,
+			-- 			},
+			-- 			-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+			-- 			-- diagnostics = { disable = { 'missing-fields' } },
+			-- 		},
+			-- 	},
+			-- },
 
 		}
 
@@ -216,19 +210,34 @@ return { -- LSP Configuration & Plugins
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			'stylua', -- Used to format Lua code
+			'emmet_ls', -- Used to format Lua code
 		})
+
 		require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+		-- local lspconfig = require("lspconfig")
 		require('mason-lspconfig').setup {
 			handlers = {
+
 				function(server_name)
 					local server = servers[server_name] or {}
 					-- This handles overriding only values explicitly passed
 					-- by the server configuration above. Useful when disabling
 					-- certain features of an LSP (for example, turning off formatting for tsserver)
 					server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-					require('lspconfig')[server_name].setup(server)
+					require("lspconfig")[server_name].setup(server)
 				end,
+				-- ['emmet_ls'] = function ()
+				-- 	lspconfig['emmet_ls'].setup({
+				-- 		capabilities = capabilities,
+				-- 		filetypes = {"html", "typescriptreact", "javascriptreact", "css", "javascript", "typescript"}
+				-- 	})
+				-- end,
+				-- ['tsserver'] = function ()
+				-- 	lspconfig['tsserver'].setup({
+				-- 		capabilities = capabilities,
+				-- 	})
+				-- end
 			},
 		}
 
