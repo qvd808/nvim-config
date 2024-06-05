@@ -28,6 +28,7 @@ vim.opt.shiftwidth = 4
 vim.opt.expandtab = false
 vim.opt.paste = false
 vim.opt.cindent = false
+vim.opt.expandtab = false
 
 -- decrease update time
 vim.opt.updatetime = 250
@@ -53,3 +54,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 })
 
+-- Python style
+vim.g.python_recommended_style = 0
+vim.o.expandtab = false
