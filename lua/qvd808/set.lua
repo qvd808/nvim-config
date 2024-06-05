@@ -54,6 +54,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 })
 
+-- Usercommand
+vim.api.nvim_create_user_command("Retab",
+	function ()
+		vim.cmd('%retab!')
+	end,
+	{ nargs = 0}
+)
+
 -- Python style
 vim.g.python_recommended_style = 0
 vim.o.expandtab = false
