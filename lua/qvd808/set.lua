@@ -8,6 +8,7 @@ vim.opt.showmode = false
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.autoread = true
 
 -- search
 vim.opt.hlsearch = true
@@ -51,6 +52,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	group = vim.api.nvim_create_augroup('kickstart-highlight-yank', {clear = true}),
 	callback =  function ()
 		vim.highlight.on_yank()
+	end,
+})
+
+vim.api.nvim_create_autocmd({'BufEnter', 'CursorHold', 'CursorHoldI', 'FocusGained'}, {
+	desc = "Reload buffer when files change",
+	group = vim.api.nvim_create_augroup("reload-buffer-change", {clear = true}),
+	callback =  function ()
+		vim.api.nvim_command("checktime")
 	end,
 })
 
